@@ -1,0 +1,84 @@
+<?php
+  if( isset( $_SESSION['id_rol'] )) {
+    $id_rol = $_SESSION['id_rol'];
+  } else {
+    $id_rol = 2;
+  }
+
+  require_once('conexion.php');
+  $sqlCategorias = "SELECT id_categoria, descripcion
+          FROM categorias";
+
+  $resultadoCategorias = mysqli_query($conexion, $sqlCategorias);
+    
+
+?>
+
+<nav class="navbar navbar-expand-lg  bg-dark"  data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Tienda</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="index.php">Inicio</a>
+          </li>
+          <?php
+              if($logueado == false){
+          ?>
+            <li class="nav-item">
+              <a class="nav-link" href="registro.php">Registro</a>
+            </li>
+          <?php
+              }
+          ?>
+
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="index.php" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Productos
+            </a>
+            <ul class="dropdown-menu">
+              <?php 
+
+                while( $arrayCat = mysqli_fetch_assoc( $resultadoCategorias)) {
+                    $categoriaDescripcion = $arrayCat['descripcion'];
+                    $id_categoria = $arrayCat['id_categoria'];
+
+                    echo("<li><a class='dropdown-item' href='index.php?id_categoria=$id_categoria'>$categoriaDescripcion</a></li>");
+                }
+              ?>
+
+            </ul>
+          </li>
+
+          <?php
+              if($id_rol == 1){
+          ?>
+            <li class="nav-item">
+              <a class="nav-link" href="nuevo.php">Nuevo Producto</a>
+            </li>
+          <?php
+              }
+          ?>
+        </ul>
+        <form class="d-flex" role="search">
+          <?php
+              if($logueado == true){
+                echo("<p class='text-white'> $nombre </p>");
+                echo("<a class='btn btn-outline-danger' href='logout.php'>Salir</a>");
+
+              } else {
+                echo("<a class='btn btn-outline-success' href='login.php'>Login</a>");
+
+              };
+          ?>
+          
+
+          
+        </form>
+      </div>
+    </div>
+  </nav>
